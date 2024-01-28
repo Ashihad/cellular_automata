@@ -8,7 +8,10 @@
 Automata1DModel::Automata1DModel(std::size_t newSize) {
     // create board
     board.resize(newSize);
-    std::fill(board.begin(), board.end(), 0);
+    srand(time(NULL));
+    for (auto iter = begin(board); iter != end(board); ++iter) {
+        *iter = rand() % 2 ? '0' : '1';
+    }
 }
 
 void Automata1DModel::nextState() {
@@ -18,4 +21,5 @@ void Automata1DModel::nextState() {
     for (size_t i = 1; i < newBoard.size()-1; ++i) {
         if (board[i-1] == '1' && board[i+1] == '1') newBoard[i] = '1';    // rule 161
     }
+    board = newBoard;
 }

@@ -9,14 +9,16 @@ class Automata1DModel;
 class AutomataViewInterface {
     public:
         virtual void writeBoard() const = 0;
+        virtual ~AutomataViewInterface() = default;
     //protected:
-        std::shared_ptr<Automata1DModel> model_ptr;
+        std::weak_ptr<Automata1DModel> model_ptr;
 };
 
 class Automata1DConsoleWriter : public AutomataViewInterface {
     public:
-        Automata1DConsoleWriter(Automata1DModel* ptr) {
-            model_ptr.reset(ptr);
+        Automata1DConsoleWriter(std::shared_ptr<Automata1DModel> ptr) {
+            model_ptr.reset();
+            model_ptr = std::weak_ptr<Automata1DModel> {ptr};
         }
         virtual void writeBoard() const override;
 };

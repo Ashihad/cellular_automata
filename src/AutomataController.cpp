@@ -8,7 +8,7 @@ void AutomataController::setView(ViewMode mode) {
         //     view_ptr.reset(new Automata1DFileWriter(model_ptr.get(), "file.txt"));
         //     break;
         case ViewMode::Printmode:
-            view_ptr.reset(new Automata1DConsoleWriter(model_ptr.get()));
+            view_ptr.reset(new Automata1DConsoleWriter(model_ptr));
             break;
         default:
             throw NotImplemented();
