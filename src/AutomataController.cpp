@@ -19,7 +19,8 @@ void AutomataController::setView(ViewMode mode) {
 void AutomataController::setModel(Model mode) {
     switch (mode) {
         case Model::Basic1D:
-            model_ptr.reset(new Automata1DModel(20));
+            model_ptr.reset(new Automata1DModel(31));
+            model_ptr->setRule(90);
             break;
         case Model::Square2D:
             throw NotImplemented();
@@ -31,6 +32,7 @@ void AutomataController::setModel(Model mode) {
 }
 
 void AutomataController::runModel(unsigned int iters) {
+    view_ptr->writeBoard();
     for (unsigned int i = 0; i < iters; ++i) {
         model_ptr->nextState();
         view_ptr->writeBoard();

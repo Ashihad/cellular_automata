@@ -15,6 +15,7 @@ enum class Model {
 class AutomataControllerInterface {
     public:
         virtual ~AutomataControllerInterface() = default;
+        
         virtual void setView(ViewMode) = 0;
         virtual void setModel(Model) = 0;
         virtual void runModel(unsigned int) = 0;
@@ -27,6 +28,7 @@ class AutomataController final : public AutomataControllerInterface {
     public:
         AutomataController() = default;
         virtual ~AutomataController() = default;
+
         virtual void setView(ViewMode) override;
         virtual void setModel(Model) override;
         virtual void runModel(unsigned int) override;
