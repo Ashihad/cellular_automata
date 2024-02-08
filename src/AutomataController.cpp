@@ -31,7 +31,7 @@ void AutomataController::setModel(const Model mode, const size_t boardSize, cons
     }
 }
 
-void AutomataController::runModel(const unsigned int iters) {
+void AutomataController::runModel(const unsigned int iters) const {
     view_ptr->writeBoard();
     for (unsigned int i = 0; i < iters; ++i) {
         model_ptr->nextState();

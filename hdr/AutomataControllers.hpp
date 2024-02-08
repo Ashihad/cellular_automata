@@ -19,7 +19,7 @@ class AutomataControllerInterface {
         virtual ~AutomataControllerInterface() = default;
         virtual void setView(const ViewMode) = 0;
         virtual void setModel(const Model, const size_t, const uint8_t) = 0;
-        virtual void runModel(const unsigned int) = 0;
+        virtual void runModel(const unsigned int) const = 0;
     protected:
         std::unique_ptr<AutomataViewInterface> view_ptr;
         std::shared_ptr<Automata1DModel> model_ptr;
@@ -32,5 +32,5 @@ class AutomataController final : public AutomataControllerInterface {
 
         virtual void setView(const ViewMode) override;
         virtual void setModel(const Model, const size_t, const uint8_t) override;
-        virtual void runModel(const unsigned int) override;
+        virtual void runModel(const unsigned int) const override;
 };
