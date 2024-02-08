@@ -9,26 +9,25 @@
 Automata1DModel::Automata1DModel(std::size_t newSize) {
     // create board
     board.resize(newSize);
-    srand(time(NULL));
-    for (size_t i = 0; i < 15; ++i) {
+
+    // default board is standard Wikipedia test one, middle cell is alive, rest is dead
+    for (size_t i = 0; i < newSize/2; ++i) {
         board[i] = '0';
     }
-    board[15] = '1';
-    for (size_t i = 16; i < 31; ++i) {
+    board[newSize/2] = '1';
+    for (size_t i = newSize/2+1; i < newSize; ++i) {
         board[i] = '0';
     }
-    // for (auto iter = begin(board); iter != end(board); ++iter) {
-    //     *iter = rand() % 2 ? '0' : '1';
-    // }
 }
 
 void Automata1DModel::nextState() {
     Board1DType newBoard;
     newBoard.resize(board.size());
     std::fill(begin(newBoard), end(newBoard), '0');
-    for (size_t i = 1; i < newBoard.size()-1; ++i) {
-        // if (board[i-1] == '1' && board[i+1] == '1') newBoard[i] = '1';    // rule 161
-        newBoard[i] = rule(board[i-1], board[i], board[i+1]);
+    for (size_t i = 0; i < newBoard.size(); ++i) {
+        // index wraps around in case of out of bounds access
+        // (i + newBoard.size() - 1) prevents overflow, since i is of type size_t
+        newBoard[i] = rule(board[(i + newBoard.size() - 1) % newBoard.size()], board[i], board[(i + 1) % newBoard.size()]);
     }
     board = newBoard;
 }
