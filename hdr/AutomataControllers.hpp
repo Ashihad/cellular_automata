@@ -17,9 +17,9 @@ enum class Model {
 class AutomataControllerInterface {
     public:
         virtual ~AutomataControllerInterface() = default;
-        virtual void setView(ViewMode) = 0;
-        virtual void setModel(Model) = 0;
-        virtual void runModel(unsigned int) = 0;
+        virtual void setView(const ViewMode) = 0;
+        virtual void setModel(const Model, const size_t, const uint8_t) = 0;
+        virtual void runModel(const unsigned int) = 0;
     protected:
         std::unique_ptr<AutomataViewInterface> view_ptr;
         std::shared_ptr<Automata1DModel> model_ptr;
@@ -30,7 +30,7 @@ class AutomataController final : public AutomataControllerInterface {
         AutomataController() = default;
         virtual ~AutomataController() = default;
 
-        virtual void setView(ViewMode) override;
-        virtual void setModel(Model) override;
-        virtual void runModel(unsigned int) override;
+        virtual void setView(const ViewMode) override;
+        virtual void setModel(const Model, const size_t, const uint8_t) override;
+        virtual void runModel(const unsigned int) override;
 };

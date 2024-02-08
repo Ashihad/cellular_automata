@@ -1,7 +1,7 @@
 #include "AutomataControllers.hpp"
 #include "Exceptions.hpp"
 
-void AutomataController::setView(ViewMode mode) {
+void AutomataController::setView(const ViewMode mode) {
     if (model_ptr == nullptr) throw std::logic_error("You need to set Model before setting ViewMode");
     switch (mode) {
         // case ViewMode::Filemode:
@@ -16,11 +16,11 @@ void AutomataController::setView(ViewMode mode) {
     }
 }
 
-void AutomataController::setModel(Model mode) {
+void AutomataController::setModel(const Model mode, const size_t boardSize, const uint8_t rule_no) {
     switch (mode) {
         case Model::Basic1D:
-            model_ptr.reset(new Automata1DModel(31));
-            model_ptr->setRule(90);
+            model_ptr.reset(new Automata1DModel(boardSize));
+            model_ptr->setRule(rule_no);
             break;
         case Model::Square2D:
             throw NotImplemented();
@@ -31,7 +31,7 @@ void AutomataController::setModel(Model mode) {
     }
 }
 
-void AutomataController::runModel(unsigned int iters) {
+void AutomataController::runModel(const unsigned int iters) {
     view_ptr->writeBoard();
     for (unsigned int i = 0; i < iters; ++i) {
         model_ptr->nextState();
