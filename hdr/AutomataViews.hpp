@@ -12,6 +12,9 @@ class AutomataViewInterface {
         virtual ~AutomataViewInterface() = default;
     //protected:
         std::weak_ptr<Automata1DModel> model_ptr;
+
+        char aliveSymbol {'O'};
+        char deadSymbol {' '};
 };
 
 class Automata1DConsoleWriter : public AutomataViewInterface {
