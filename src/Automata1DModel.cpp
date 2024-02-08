@@ -30,6 +30,7 @@ void Automata1DModel::nextState() {
     // reset tmpBoard
     std::fill(begin(tmpBoard), end(tmpBoard), '0');
     
+    // apply rule
     auto tmpBoardIt { begin(tmpBoard) };
     auto boardIt { begin(board) };
     for (; tmpBoardIt != end(tmpBoard); ++tmpBoardIt, ++boardIt) {
