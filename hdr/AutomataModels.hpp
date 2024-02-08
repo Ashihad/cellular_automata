@@ -23,4 +23,6 @@ class Automata1DModel {
         Board1DType board;
         Board1DType tmpBoard;
         std::function<char(char, char, char)> rule;
+        char aliveInternal {'1'};
+        char deadInternal {'0'};
 };
