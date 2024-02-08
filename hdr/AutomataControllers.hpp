@@ -2,11 +2,13 @@
 #include "AutomataModels.hpp"
 #include "AutomataViews.hpp"
 
+// each enum value represents different output mode 
 enum class ViewMode {
     Filemode,
     Printmode
 };
 
+// each enum value represents different model 
 enum class Model {
     Basic1D,
     Square2D
@@ -15,7 +17,6 @@ enum class Model {
 class AutomataControllerInterface {
     public:
         virtual ~AutomataControllerInterface() = default;
-        
         virtual void setView(ViewMode) = 0;
         virtual void setModel(Model) = 0;
         virtual void runModel(unsigned int) = 0;

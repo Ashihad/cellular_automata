@@ -7,7 +7,7 @@
 #include <bitset>
 
 Automata1DModel::Automata1DModel(const std::size_t newSize) {
-    // create board
+    // create boards
     board.resize(newSize);
     tmpBoard.resize(newSize);
 
