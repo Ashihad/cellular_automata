@@ -34,8 +34,11 @@ void Automata1DModel::nextState() {
 }
 
 void Automata1DModel::setRule(const uint8_t rule_no) {
+    // convert unsigned 8 bit int to bits and then to string, for ease of iteration
     std::string binary_rule { std::bitset<8>(rule_no).to_string() };
 
+    // construct automata rule from bits
+    // see  https://en.wikipedia.org/wiki/Elementary_cellular_automaton
     rule = [binary_rule] (char left, char middle, char right) {
         if (left == '1' && middle == '1' && right == '1') return binary_rule[0];
         else if (left == '1' && middle == '1' && right == '0') return binary_rule[1];
@@ -45,6 +48,7 @@ void Automata1DModel::setRule(const uint8_t rule_no) {
         else if (left == '0' && middle == '1' && right == '0') return binary_rule[5];
         else if (left == '0' && middle == '0' && right == '1') return binary_rule[6];
         else if (left == '0' && middle == '0' && right == '0') return binary_rule[7];
+        // if function does not exit by now something went wrong
         throw std::logic_error("Rule broken");
     };
 }
