@@ -9,19 +9,12 @@
 
 using Board1DType = std::vector<char>;
 
-// class AutomataModelInterface {
-//     public:
-//         virtual ~AutomataModelInterface() = default;
-
-//         virtual void nextState() = 0;
-// };
-
-class Automata1DModel {//: public AutomataModelInterface {
+class Automata1DModel {
     public:
         Automata1DModel(const std::size_t);
         virtual ~Automata1DModel() = default;
 
-        virtual void nextState() ;//override;
+        virtual void nextState() ;
         virtual void setRule(const uint8_t);
 
         inline void setBoard(Board1DType newBoard) {board = newBoard;};
