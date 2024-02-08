@@ -12,24 +12,36 @@ Automata1DModel::Automata1DModel(const std::size_t newSize) {
     tmpBoard.resize(newSize);
 
     // default board is standard Wikipedia test one, middle cell is alive, rest is dead
-    for (size_t i = 0; i < newSize/2; ++i) {
-        board[i] = '0';
-    }
-    board[newSize/2] = '1';
-    for (size_t i = newSize/2+1; i < newSize; ++i) {
-        board[i] = '0';
-    }
+    auto iter { begin(board) };
+    auto middle { begin(board) };
+    std::advance(middle, newSize/2);
+
+    for (; iter != middle; ++iter)
+        *iter = '0';
+
+    *iter = '1';
+    iter++;
+
+    for (; iter != end(board); ++iter)
+        *iter = '0';
 }
 
 void Automata1DModel::nextState() {
     // reset tmpBoard
     std::fill(begin(tmpBoard), end(tmpBoard), '0');
-    for (size_t i = 0; i < tmpBoard.size(); ++i) {
+    
+    auto tmpBoardIt { begin(tmpBoard) };
+    auto boardIt { begin(board) };
+    for (; tmpBoardIt != end(tmpBoard); ++tmpBoardIt, ++boardIt) {
         // index wraps around in case of out of bounds access
-        // (i + newBoard.size() - 1) prevents overflow, since i is of type size_t
-        tmpBoard[i] = rule(board[(i + tmpBoard.size() - 1) % tmpBoard.size()], board[i], board[(i + 1) % tmpBoard.size()]);
+        // wrap around if there is out of bound access
+        // in case of one-before-first return last
+        // in case of one-after-last return first
+        *tmpBoardIt = rule( boardIt != begin(board) ? *std::prev(boardIt) : *std::prev(end(board)), 
+                            *boardIt, 
+                            std::next(boardIt) != end(board) ? *std::next(boardIt) : *begin(board));
     }
-    // commit to next state
+    // commit next state
     std::swap(board, tmpBoard);
 }
 
