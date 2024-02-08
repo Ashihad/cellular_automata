@@ -6,9 +6,10 @@
 #include <exception>
 #include <bitset>
 
-Automata1DModel::Automata1DModel(std::size_t newSize) {
+Automata1DModel::Automata1DModel(const std::size_t newSize) {
     // create board
     board.resize(newSize);
+    tmpBoard.resize(newSize);
 
     // default board is standard Wikipedia test one, middle cell is alive, rest is dead
     for (size_t i = 0; i < newSize/2; ++i) {
@@ -21,15 +22,15 @@ Automata1DModel::Automata1DModel(std::size_t newSize) {
 }
 
 void Automata1DModel::nextState() {
-    Board1DType newBoard;
-    newBoard.resize(board.size());
-    std::fill(begin(newBoard), end(newBoard), '0');
-    for (size_t i = 0; i < newBoard.size(); ++i) {
+    // reset tmpBoard
+    std::fill(begin(tmpBoard), end(tmpBoard), '0');
+    for (size_t i = 0; i < tmpBoard.size(); ++i) {
         // index wraps around in case of out of bounds access
         // (i + newBoard.size() - 1) prevents overflow, since i is of type size_t
-        newBoard[i] = rule(board[(i + newBoard.size() - 1) % newBoard.size()], board[i], board[(i + 1) % newBoard.size()]);
+        tmpBoard[i] = rule(board[(i + tmpBoard.size() - 1) % tmpBoard.size()], board[i], board[(i + 1) % tmpBoard.size()]);
     }
-    board = newBoard;
+    // commit to next state
+    std::swap(board, tmpBoard);
 }
 
 void Automata1DModel::setRule(const uint8_t rule_no) {

@@ -18,7 +18,7 @@ using Board1DType = std::vector<char>;
 
 class Automata1DModel {//: public AutomataModelInterface {
     public:
-        Automata1DModel(std::size_t size);
+        Automata1DModel(const std::size_t);
         virtual ~Automata1DModel() = default;
 
         virtual void nextState() ;//override;
@@ -28,5 +28,6 @@ class Automata1DModel {//: public AutomataModelInterface {
         inline Board1DType& getBoard() {return board;};
     private:
         Board1DType board;
+        Board1DType tmpBoard;
         std::function<char(char, char, char)> rule;
 };
