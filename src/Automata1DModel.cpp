@@ -33,7 +33,6 @@ void Automata1DModel::nextState() {
     auto tmpBoardIt { begin(tmpBoard) };
     auto boardIt { begin(board) };
     for (; tmpBoardIt != end(tmpBoard); ++tmpBoardIt, ++boardIt) {
-        // index wraps around in case of out of bounds access
         // wrap around if there is out of bound access
         // in case of one-before-first return last
         // in case of one-after-last return first
