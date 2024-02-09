@@ -17,7 +17,7 @@ enum class Model {
 class AutomataControllerInterface {
     public:
         virtual ~AutomataControllerInterface() = default;
-        virtual void setView(const ViewMode) = 0;
+        virtual void setView(const ViewMode, const std::string = "") = 0;
         virtual void setModel(const Model, const size_t, const uint8_t) = 0;
         virtual void runModel(const unsigned int) const = 0;
     protected:
@@ -30,7 +30,7 @@ class AutomataController final : public AutomataControllerInterface {
         AutomataController() = default;
         virtual ~AutomataController() = default;
 
-        virtual void setView(const ViewMode) override;
+        virtual void setView(const ViewMode, const std::string = "") override;
         virtual void setModel(const Model, const size_t, const uint8_t) override;
         virtual void runModel(const unsigned int) const override;
 };

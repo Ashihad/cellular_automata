@@ -4,11 +4,12 @@
 class Automata1DConsoleWriter;
 class Automata1DFileWriter;
 
-void AutomataController::setView(const ViewMode mode) {
+void AutomataController::setView(const ViewMode mode, const std::string filename) {
     if (model_ptr == nullptr) throw std::logic_error("You need to set Model before setting ViewMode");
     switch (mode) {
         case ViewMode::Filemode:
-            view_ptr.reset(new Automata1DFileWriter(model_ptr, "file.txt"));
+            if (filename != "") view_ptr.reset(new Automata1DFileWriter(model_ptr, filename));
+            else view_ptr.reset(new Automata1DFileWriter(model_ptr, "file.txt"));
             break;
         case ViewMode::Printmode:
             view_ptr.reset(new Automata1DConsoleWriter(model_ptr));
