@@ -10,6 +10,7 @@ Automata1DModel::Automata1DModel(const std::size_t newSize) {
     // create boards
     board.resize(newSize);
     tmpBoard.resize(newSize);
+    neighborhood.resize(3);
 
     // default board is standard Wikipedia test one, middle cell is alive, rest is dead
     auto iter { begin(board) };
@@ -37,9 +38,10 @@ void Automata1DModel::nextState() {
         // wrap around if there is out of bound access
         // in case of one-before-first return last
         // in case of one-after-last return first
-        *tmpBoardIt = rule( boardIt != begin(board) ? *std::prev(boardIt) : *std::prev(end(board)), 
-                            *boardIt, 
-                            std::next(boardIt) != end(board) ? *std::next(boardIt) : *begin(board));
+        neighborhood[0] = boardIt != begin(board) ? *std::prev(boardIt) : *std::prev(end(board));
+        neighborhood[1] = *boardIt;
+        neighborhood[2] = std::next(boardIt) != end(board) ? *std::next(boardIt) : *begin(board);
+        *tmpBoardIt = rule(neighborhood);
     }
     // commit next state
     std::swap(board, tmpBoard);
@@ -51,12 +53,12 @@ void Automata1DModel::setRule(const uint8_t rule_no) {
 
     // construct automata rule from bits
     // see  https://en.wikipedia.org/wiki/Elementary_cellular_automaton
-    rule = [binary_rule, aliveInternal=aliveInternal] (char left, char middle, char right) {
+    rule = [binary_rule, aliveInternal=aliveInternal] (std::vector<char>& neighborhood) {
         // convert alive/dead statuses to access binary_rule string by index
         size_t index {  static_cast<size_t> (
-                        7 - (left == aliveInternal ? 4 : 0)
-                        - (middle == aliveInternal ? 2 : 0)
-                        - (right == aliveInternal ? 1 : 0) 
+                        7 - (neighborhood[0] == aliveInternal ? 4 : 0)
+                        - (neighborhood[1] == aliveInternal ? 2 : 0)
+                        - (neighborhood[2] == aliveInternal ? 1 : 0) 
                         ) };
         if (index <= 7) return binary_rule[index];
         // if function does not exit by now something went wrong

@@ -2,6 +2,8 @@
 #include "AutomataModels.hpp"
 #include "AutomataViews.hpp"
 
+#include <variant>
+
 // each enum value represents different output mode 
 enum class ViewMode {
     Filemode,
@@ -23,7 +25,7 @@ class AutomataControllerInterface {
         std::string currentTag;
     protected:
         std::unique_ptr<AutomataViewInterface> view_ptr;
-        std::shared_ptr<Automata1DModel> model_ptr;
+        std::shared_ptr<AutomataModelInterface> model_ptr;
 };
 
 class AutomataController final : public AutomataControllerInterface {
