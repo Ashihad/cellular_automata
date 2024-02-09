@@ -14,12 +14,12 @@ class Automata1DModel {
         virtual void nextState() ;
         virtual void setRule(const uint8_t);
 
-        inline void setBoard(Board1DType newBoard) {board = newBoard;};
-        inline Board1DType& getBoard() {return board;};
+        inline void setBoard(Board1DType newBoard) { board = newBoard; };
+        inline Board1DType& getBoard() { return board; };
+        char aliveInternal {'1'};
+        char deadInternal {'0'};
     private:
         Board1DType board;
         Board1DType tmpBoard;
         std::function<char(char, char, char)> rule;
-        char aliveInternal {'1'};
-        char deadInternal {'0'};
 };

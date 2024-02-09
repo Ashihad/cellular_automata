@@ -9,9 +9,10 @@ Automata1DConsoleWriter::Automata1DConsoleWriter(std::shared_ptr<Automata1DModel
 }
 
 void Automata1DConsoleWriter::writeBoard() {
-    const Board1DType& board {std::shared_ptr<Automata1DModel>{model_ptr.lock()}->getBoard()}; 
+    const Board1DType& board { std::shared_ptr<Automata1DModel>{model_ptr.lock()}->getBoard() }; 
+    const char aliveModelSymbol { std::shared_ptr<Automata1DModel>{model_ptr.lock()}->aliveInternal };
     for (auto iter = cbegin(board); iter != cend(board); ++iter) {
-        std::cout << ((*iter == '1') ? aliveSymbol : deadSymbol) << ' ';
+        std::cout << ((*iter == aliveModelSymbol) ? aliveSymbol : deadSymbol) << ' ';
     }
     std::cout << '\n';
 }
