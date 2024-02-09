@@ -19,7 +19,7 @@ _OBJFILES = main.o \
 			Automata1DModel.o \
 			AutomataController.o \
 			Automata1DConsoleWriter.o \
-			#Automata1DFileWriter.o \
+			Automata1DFileWriter.o \
 
 OBJFILES = $(patsubst %,$(OBJDIR)/%,$(_OBJFILES))
 

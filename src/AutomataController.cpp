@@ -1,12 +1,15 @@
 #include "AutomataControllers.hpp"
 #include "Exceptions.hpp"
 
+class Automata1DConsoleWriter;
+class Automata1DFileWriter;
+
 void AutomataController::setView(const ViewMode mode) {
     if (model_ptr == nullptr) throw std::logic_error("You need to set Model before setting ViewMode");
     switch (mode) {
-        // case ViewMode::Filemode:
-        //     view_ptr.reset(new Automata1DFileWriter(model_ptr.get(), "file.txt"));
-        //     break;
+        case ViewMode::Filemode:
+            view_ptr.reset(new Automata1DFileWriter(model_ptr, "file.txt"));
+            break;
         case ViewMode::Printmode:
             view_ptr.reset(new Automata1DConsoleWriter(model_ptr));
             break;
