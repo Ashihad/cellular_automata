@@ -2,9 +2,6 @@
 #include "AutomataViews.hpp"
 
 #include <vector>
-#include <cstddef>
-#include <istream>
-#include <memory>
 #include <functional>
 
 using Board1DType = std::vector<char>;
