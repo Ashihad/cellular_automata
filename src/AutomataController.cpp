@@ -12,11 +12,11 @@ void AutomataController::setView(const ViewMode mode, const std::string filename
         case ViewMode::Filemode:
             if (filename != "") view_ptr.reset(new Automata1DFileWriter(model_ptr, filename));
             else view_ptr.reset(new Automata1DFileWriter(model_ptr, "file.txt"));
-            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentinality of model and view detected");
+            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
             break;
         case ViewMode::Printmode:
             view_ptr.reset(new Automata1DConsoleWriter(model_ptr));
-            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentinality of model and view detected");
+            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
             break;
         default:
             throw NotImplemented();
