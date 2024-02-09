@@ -18,3 +18,7 @@ void Automata1DFileWriter::writeBoard() {
     }
     writeStream << '\n';
 }
+
+std::string Automata1DFileWriter::getTag() {
+    return tag;
+}

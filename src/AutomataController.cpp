@@ -1,6 +1,8 @@
 #include "AutomataControllers.hpp"
 #include "Exceptions.hpp"
 
+#include <iostream>
+
 class Automata1DConsoleWriter;
 class Automata1DFileWriter;
 
@@ -10,9 +12,11 @@ void AutomataController::setView(const ViewMode mode, const std::string filename
         case ViewMode::Filemode:
             if (filename != "") view_ptr.reset(new Automata1DFileWriter(model_ptr, filename));
             else view_ptr.reset(new Automata1DFileWriter(model_ptr, "file.txt"));
+            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentinality of model and view detected");
             break;
         case ViewMode::Printmode:
             view_ptr.reset(new Automata1DConsoleWriter(model_ptr));
+            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentinality of model and view detected");
             break;
         default:
             throw NotImplemented();
@@ -23,10 +27,12 @@ void AutomataController::setView(const ViewMode mode, const std::string filename
 void AutomataController::setModel(const Model mode, const size_t boardSize, const uint8_t rule_no) {
     switch (mode) {
         case Model::Basic1D:
+            currentTag = "1D";
             model_ptr.reset(new Automata1DModel(boardSize));
             model_ptr->setRule(rule_no);
             break;
         case Model::Square2D:
+            currentTag = "2D";
             throw NotImplemented();
             break;
         default:

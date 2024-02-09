@@ -16,6 +16,7 @@ class Automata1DModel {
 
         inline void setBoard(Board1DType newBoard) { board = newBoard; };
         inline Board1DType& getBoard() { return board; };
+        const std::string tag {"1D"};
         char aliveInternal {'1'};
         char deadInternal {'0'};
     private:

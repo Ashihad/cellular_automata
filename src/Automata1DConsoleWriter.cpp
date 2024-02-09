@@ -16,3 +16,7 @@ void Automata1DConsoleWriter::writeBoard() {
     }
     std::cout << '\n';
 }
+
+std::string Automata1DConsoleWriter::getTag() {
+    return tag;
+}
