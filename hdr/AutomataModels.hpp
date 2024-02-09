@@ -33,22 +33,23 @@ class Automata1DModel : public AutomataModelInterface {
         std::function<char(std::vector<char>&)> rule;
 };
 
-// class Automata2DSquareModel : public AutomataModelInterface {
-//     public:
-//         Automata2DSquareModel(const std::size_t, const std::size_t);
-//         virtual ~Automata2DSquareModel() = default;
+class Automata2DSquareModel : public AutomataModelInterface {
+    public:
+        Automata2DSquareModel(const std::size_t, const std::size_t);
+        Automata2DSquareModel(const std::size_t);
+        virtual ~Automata2DSquareModel() = default;
 
-//         virtual void nextState() override;
-//         virtual void setRule(const uint8_t) override;
+        virtual void nextState() override;
+        virtual void setRule(const uint8_t) override;
 
-//         inline void setBoard(Board2DType newBoard) { board = newBoard; };
-//         inline Board2DType& getBoard() { return board; };
-//         const std::string tag {"2D"};
-//         char aliveInternal {'1'};
-//         char deadInternal {'0'};
-//     private:
-//         Board2DType board;
-//         Board2DType tmpBoard;
-//         std::vector<char> neighborhood;
-//         std::function<char(char, char, char)> rule;
-// };
+        inline void setBoard(Board2DType newBoard) { board = newBoard; };
+        inline Board2DType& getBoard() { return board; };
+        const std::string tag {"2D"};
+        char aliveInternal {'1'};
+        char deadInternal {'0'};
+    private:
+        Board2DType board;
+        Board2DType tmpBoard;
+        std::vector<char> neighborhood;
+        std::function<char(std::vector<char>&)> rule;
+};
