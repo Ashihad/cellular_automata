@@ -2,9 +2,6 @@
 
 #include <cassert>
 
-// TODEL
-#include <iostream>
-
 Automata2DSquareModel::Automata2DSquareModel(const std::size_t size):
     Automata2DSquareModel::Automata2DSquareModel(size, size) {}
 
@@ -21,24 +18,10 @@ Automata2DSquareModel::Automata2DSquareModel(const std::size_t x_size, const std
     // default is Moore neighborghood
     neighborhood.resize(9);
 
-    // default board is three alive cells in a row, one row below start
-    assert(x_size >= 2 && y_size >= 3);
-    for (auto rowIter = begin(board); rowIter != end(board); ++rowIter) {
-        for (auto collIter = begin(*rowIter); collIter != end(*rowIter); ++collIter) {
-            *collIter = deadInternal;
-        }
-    }
-    auto rowIterBegin {std::next(begin(board), 2)};
-    auto rowIterEnd {std::next(begin(board), 3)};
-    auto collIterBegin {std::next(rowIterBegin->begin(), 2)};
-    auto collIterEnd {std::next(rowIterBegin->begin(), 5)};
-    for (auto rowIter = rowIterBegin; rowIter != rowIterEnd; ++rowIter) {
-        for (auto collIter = collIterBegin; collIter != collIterEnd; ++collIter) {
-            *collIter = aliveInternal;
-        }
-    }
+    // default board is three alive cells in a row, one row below start, so called oscillator
+    setOscillator();
 
-    setRule(0xde);
+    setRule(Rule2D::Conway);
 
 }
 
@@ -71,55 +54,53 @@ void Automata2DSquareModel::nextState() {
             neighborhood[8] = *std::next(nextRow->begin(), distance+1);
             
             *tmpIterColl = rule(neighborhood);
-
-            // std::cout << "row: " << std::distance(begin(board), iterRow) << " , coll: " << distance << '\n';
-            // std::cout << neighborhood[0] << ' ' << neighborhood[1] << ' ' << neighborhood[2] << '\n';
-            // std::cout << neighborhood[3] << ' ' << neighborhood[4] << ' ' << neighborhood[5] << '\n';
-            // std::cout << neighborhood[6] << ' ' << neighborhood[7] << ' ' << neighborhood[8] << '\n';
-            // std:: cout << '\n';
         }
     }
     std::swap(board, tmpBoard);
 }
 
-// void Automata1DModel::nextState() {
-//     // reset tmpBoard
-//     std::fill(begin(tmpBoard), end(tmpBoard), deadInternal);
-    
-//     // apply rule
-//     auto tmpBoardIt { begin(tmpBoard) };
-//     auto boardIt { begin(board) };
-//     for (; tmpBoardIt != end(tmpBoard); ++tmpBoardIt, ++boardIt) {
-//         // wrap around if there is out of bound access
-//         // in case of one-before-first return last
-//         // in case of one-after-last return first
-//         neighborhood[0] = boardIt != begin(board) ? *std::prev(boardIt) : *std::prev(end(board));
-//         neighborhood[1] = *boardIt;
-//         neighborhood[2] = std::next(boardIt) != end(board) ? *std::next(boardIt) : *begin(board);
-//         *tmpBoardIt = rule(neighborhood);
-//     }
-//     // commit next state
-//     std::swap(board, tmpBoard);
-// }
+void Automata2DSquareModel::setRule(Rule2D ruleEnum) {
+    switch (ruleEnum) {
+        case Rule2D::Conway:
+            // classic conways game of life rule
+            rule = [alive=aliveInternal, dead=deadInternal] (std::vector<char>& neighborhood) {
+                // convert alive/dead statuses to access binary_rule string by index
+                long int aliveNeighbors { std::count(begin(neighborhood), std::next(begin(neighborhood), 5), alive)
+                                        + std::count(std::next(begin(neighborhood), 6), end(neighborhood), alive) };
+                bool isAlive { *std::next(begin(neighborhood), 5) == alive ? true : false };
+                if (isAlive) {
+                    // underpopulation
+                    if (aliveNeighbors < 2) return dead;
+                    // lives on happily
+                    else if (aliveNeighbors < 4) return alive;
+                    // overpopulation
+                    else return dead;
+                }
+                // reproduction
+                else if (aliveNeighbors == 3) return alive;
+                return dead;
+            };
+            break;
+        default:
+            throw std::logic_error("Bad rule selected");
+            break;
+    }
+}
 
-void Automata2DSquareModel::setRule([[maybe_unused]] const uint8_t) {
-    // classic conways game of life rule
-    rule = [alive=aliveInternal, dead=deadInternal] (std::vector<char>& neighborhood) {
-        // convert alive/dead statuses to access binary_rule string by index
-        long int aliveNeighbors { std::count(begin(neighborhood), std::next(begin(neighborhood), 5), alive)
-                                + std::count(std::next(begin(neighborhood), 6), end(neighborhood), alive) };
-        bool isAlive { *std::next(begin(neighborhood), 5) == alive ? true : false };
-        if (isAlive) {
-            // underpopulation
-            if (aliveNeighbors < 2) return dead;
-            // lives on happily
-            else if (aliveNeighbors < 4) return alive;
-            // overpopulation
-            else return dead;
+void Automata2DSquareModel::setOscillator() {
+    assert(board.size() > 2 && begin(board)->size() > 2);
+    for (auto rowIter = begin(board); rowIter != end(board); ++rowIter) {
+        for (auto collIter = begin(*rowIter); collIter != end(*rowIter); ++collIter) {
+            *collIter = deadInternal;
         }
-        // reproduction
-        else if (aliveNeighbors == 3) return alive;
-        return dead;
-    };
-    return;
+    }
+    auto rowIterBegin {std::next(begin(board), 2)};
+    auto rowIterEnd {std::next(begin(board), 3)};
+    auto collIterBegin {std::next(rowIterBegin->begin(), 2)};
+    auto collIterEnd {std::next(rowIterBegin->begin(), 5)};
+    for (auto rowIter = rowIterBegin; rowIter != rowIterEnd; ++rowIter) {
+        for (auto collIter = collIterBegin; collIter != collIterEnd; ++collIter) {
+            *collIter = aliveInternal;
+        }
+    }
 }

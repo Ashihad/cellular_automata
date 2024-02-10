@@ -10,7 +10,6 @@ using Board2DType = std::vector<std::vector<char>>;
 class AutomataModelInterface {
     public:
         virtual void nextState() = 0;
-        virtual void setRule(const uint8_t) = 0;
 };
 
 class Automata1DModel : public AutomataModelInterface {
@@ -19,7 +18,7 @@ class Automata1DModel : public AutomataModelInterface {
         virtual ~Automata1DModel() = default;
 
         virtual void nextState() override;
-        virtual void setRule(const uint8_t) override;
+        virtual void setRule(const uint8_t);
 
         inline void setBoard(Board1DType newBoard) { board = newBoard; };
         inline Board1DType& getBoard() { return board; };
@@ -33,6 +32,10 @@ class Automata1DModel : public AutomataModelInterface {
         std::function<char(std::vector<char>&)> rule;
 };
 
+enum class Rule2D {
+    Conway
+};
+
 class Automata2DSquareModel : public AutomataModelInterface {
     public:
         Automata2DSquareModel(const std::size_t, const std::size_t);
@@ -40,10 +43,12 @@ class Automata2DSquareModel : public AutomataModelInterface {
         virtual ~Automata2DSquareModel() = default;
 
         virtual void nextState() override;
-        virtual void setRule(const uint8_t) override;
+        virtual void setRule(Rule2D);
 
         inline void setBoard(Board2DType newBoard) { board = newBoard; };
         inline Board2DType& getBoard() { return board; };
+
+        void setOscillator();
         const std::string tag {"2D"};
         char aliveInternal {'1'};
         char deadInternal {'0'};

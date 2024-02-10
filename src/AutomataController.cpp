@@ -43,12 +43,11 @@ void AutomataController::setModel(const Model mode, const size_t boardSize, cons
         case Model::Basic1D:
             currentTag = "1D";
             model_ptr.reset(new Automata1DModel(boardSize)); 
-            model_ptr->setRule(rule_no);
+            std::dynamic_pointer_cast<Automata1DModel>(model_ptr)->setRule(rule_no);
             break;
         case Model::Square2D:
             currentTag = "2D";
             model_ptr.reset(new Automata2DSquareModel(boardSize)); 
-            model_ptr->setRule(rule_no);
             break;
         default:
             throw std::invalid_argument("Bad Model selected");
