@@ -21,6 +21,7 @@ _OBJFILES = main.o \
 			Automata1DConsoleWriter.o \
 			Automata1DFileWriter.o \
 			Automata2DSquareModel.o \
+			Automata2DSquareConsoleWriter.o \
 
 OBJFILES = $(patsubst %,$(OBJDIR)/%,$(_OBJFILES))
 

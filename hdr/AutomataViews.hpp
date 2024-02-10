@@ -5,6 +5,7 @@
 
 class AutomataModelInterface;
 class Automata1DModel;
+class Automata2DSquareModel;
 
 class AutomataViewInterface {
     public:
@@ -12,9 +13,8 @@ class AutomataViewInterface {
         virtual void writeBoard() = 0;
         virtual std::string getTag() = 0;
     protected:
-        std::weak_ptr<Automata1DModel> model_ptr;
         char aliveSymbol {'O'};
-        char deadSymbol {' '};
+        char deadSymbol {'.'};
 };
 
 class Automata1DConsoleWriter : public AutomataViewInterface {
@@ -23,6 +23,8 @@ class Automata1DConsoleWriter : public AutomataViewInterface {
         virtual ~Automata1DConsoleWriter() = default;
         virtual void writeBoard() override;
         virtual std::string getTag() override;
+    protected:
+        std::weak_ptr<Automata1DModel> model_ptr;
     private:
         const std::string tag {"1D"};
 };
@@ -33,7 +35,21 @@ class Automata1DFileWriter : public AutomataViewInterface {
         virtual ~Automata1DFileWriter() = default;
         virtual void writeBoard() override;
         virtual std::string getTag() override;
+    protected:
+        std::weak_ptr<Automata1DModel> model_ptr;
     private:
         const std::string tag {"1D"};
         std::ofstream writeStream;
+};
+
+class Automata2DSquareConsoleWriter : public AutomataViewInterface {
+    public:
+        Automata2DSquareConsoleWriter(std::shared_ptr<Automata2DSquareModel>);
+        virtual ~Automata2DSquareConsoleWriter() = default;
+        virtual void writeBoard() override;
+        virtual std::string getTag() override;
+    protected:
+        std::weak_ptr<Automata2DSquareModel> model_ptr;
+    private:
+        const std::string tag {"2D"};
 };

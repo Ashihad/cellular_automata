@@ -4,9 +4,9 @@
 
 int main() {
     AutomataController test_automata;
-    test_automata.setModel(Model::Basic1D, 31, 90);
-    test_automata.setView(ViewMode::Printmode);
+    test_automata.setModel(Model::Square2D, 9, 90);
+    test_automata.setView(ViewMode::Printmode2D);
     // test_automata.setView(ViewMode::Filemode);
-    test_automata.runModel(15);
+    test_automata.runModel(4);
     return 0;
 }

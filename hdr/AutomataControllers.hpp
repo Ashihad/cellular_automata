@@ -7,7 +7,8 @@
 // each enum value represents different output mode 
 enum class ViewMode {
     Filemode,
-    Printmode
+    Printmode,
+    Printmode2D
 };
 
 // each enum value represents different model 

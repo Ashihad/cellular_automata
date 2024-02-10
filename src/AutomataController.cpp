@@ -27,6 +27,11 @@ void AutomataController::setView(const ViewMode mode, const std::string filename
             
             if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
             break;
+        case ViewMode::Printmode2D:
+            view_ptr.reset(new Automata2DSquareConsoleWriter(std::dynamic_pointer_cast<Automata2DSquareModel>(model_ptr)));
+            
+            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
+            break;
         default:
             throw NotImplemented();
             break;
@@ -42,7 +47,8 @@ void AutomataController::setModel(const Model mode, const size_t boardSize, cons
             break;
         case Model::Square2D:
             currentTag = "2D";
-            throw NotImplemented();
+            model_ptr.reset(new Automata2DSquareModel(boardSize)); 
+            model_ptr->setRule(rule_no);
             break;
         default:
             throw std::invalid_argument("Bad Model selected");
