@@ -49,6 +49,7 @@ class Automata2DSquareModel : public AutomataModelInterface {
         inline Board2DType& getBoard() { return board; };
 
         void setOscillator();
+        void setShiftedOscillator();
         const std::string tag {"2D"};
         char aliveInternal {'1'};
         char deadInternal {'0'};

@@ -19,7 +19,7 @@ Automata2DSquareModel::Automata2DSquareModel(const std::size_t x_size, const std
     neighborhood.resize(9);
 
     // default board is three alive cells in a row, one row below start, so called oscillator
-    setOscillator();
+    setShiftedOscillator();
 
     setRule(Rule2D::Conway);
 
@@ -30,32 +30,39 @@ void Automata2DSquareModel::nextState() {
     for (auto& row : tmpBoard)
         std::fill(begin(row), end(row), deadInternal);
 
-    auto iterRow = std::next(begin(board));
-    auto tmpIterRow = std::next(begin(tmpBoard));
-    for (; iterRow != std::prev(end(board)); ++iterRow, ++tmpIterRow) {
-        auto iterColl = std::next(iterRow->begin());
-        auto tmpIterColl = std::next(tmpIterRow->begin());
-        for (; iterColl != std::prev(iterRow->end()); ++iterColl, ++tmpIterColl) {
+    auto iterRow = begin(board);
+    auto tmpIterRow = begin(tmpBoard);
+    for (; iterRow != end(board); ++iterRow, ++tmpIterRow) {
+        auto iterColl = iterRow->begin();
+        auto tmpIterColl = tmpIterRow->begin();
+        for (; iterColl != iterRow->end(); ++iterColl, ++tmpIterColl) {
             // construct neighborhood
-            auto distance { std::distance(iterRow->begin(), iterColl) };
+            std::size_t distance { static_cast<std::size_t>(std::distance(iterRow->begin(), iterColl)) };
 
-            auto previousRow { std::prev(iterRow) };
-            neighborhood[0] = *std::next(previousRow->begin(), distance-1);
+            // this line ensures that previous row is either valid or last one
+            auto previousRow { iterRow != begin(board) ? std::prev(iterRow) : std::prev(end(board))};
+            // bound checking left-right
+            neighborhood[0] = distance != 0 ? *std::next(previousRow->begin(), distance-1) : *std::prev(previousRow->end());
             neighborhood[1] = *std::next(previousRow->begin(), distance);
-            neighborhood[2] = *std::next(previousRow->begin(), distance+1);
+            neighborhood[2] = distance != iterRow->size()-1 ? *std::next(previousRow->begin(), distance+1): *(previousRow->begin());
             
-            neighborhood[3] = *std::prev(iterColl);
+            // bound checking left-right
+            neighborhood[3] = distance != 0 ? *std::prev(iterColl) : *std::prev(iterRow->end());
             neighborhood[4] = *iterColl;
-            neighborhood[5] = *std::next(iterColl);
+            neighborhood[5] = distance != iterRow->size()-1 ? *std::next(iterColl) : *(iterRow->begin());
             
-            auto nextRow { std::next(iterRow) };
-            neighborhood[6] = *std::next(nextRow->begin(), distance-1);
+            // this line ensures that next row is either valid or first one
+            auto nextRow { iterRow != std::prev(end(board)) ? std::next(iterRow) : begin(board)};
+            // bound checking left-right
+            neighborhood[6] = distance != 0 ? *std::next(nextRow->begin(), distance-1) : *std::prev(nextRow->end());
             neighborhood[7] = *std::next(nextRow->begin(), distance);
-            neighborhood[8] = *std::next(nextRow->begin(), distance+1);
+            neighborhood[8] = distance != iterRow->size()-1 ? *std::next(nextRow->begin(), distance+1) : *(nextRow->begin());
             
+            // get next state given a neighborhood
             *tmpIterColl = rule(neighborhood);
         }
     }
+    // commit to next state
     std::swap(board, tmpBoard);
 }
 
@@ -88,6 +95,7 @@ void Automata2DSquareModel::setRule(Rule2D ruleEnum) {
 }
 
 void Automata2DSquareModel::setOscillator() {
+    // minimal size: 3x3
     assert(board.size() > 2 && begin(board)->size() > 2);
     for (auto rowIter = begin(board); rowIter != end(board); ++rowIter) {
         for (auto collIter = begin(*rowIter); collIter != end(*rowIter); ++collIter) {
@@ -103,4 +111,25 @@ void Automata2DSquareModel::setOscillator() {
             *collIter = aliveInternal;
         }
     }
+}
+
+void Automata2DSquareModel::setShiftedOscillator() {
+    // minimal size: 3x3
+    assert(board.size() > 2 && begin(board)->size() > 2);
+    for (auto rowIter = begin(board); rowIter != end(board); ++rowIter) {
+        for (auto collIter = begin(*rowIter); collIter != end(*rowIter); ++collIter) {
+            *collIter = deadInternal;
+        }
+    }
+    auto rowIterBegin {begin(board)};
+    auto rowIterEnd {std::next(begin(board), 1)};
+    auto collIterBegin {rowIterBegin->begin()};
+    auto collIterEnd {std::next(rowIterBegin->begin(), 2)};
+    for (auto rowIter = rowIterBegin; rowIter != rowIterEnd; ++rowIter) {
+        for (auto collIter = collIterBegin; collIter != collIterEnd; ++collIter) {
+            *collIter = aliveInternal;
+        }
+    }
+    auto lastToRight {std::prev(begin(board)->end())};
+    *lastToRight = aliveInternal;
 }
