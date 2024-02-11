@@ -7,43 +7,15 @@
 class Automata1DConsoleWriter;
 class Automata1DFileWriter;
 
-void AutomataController::setView(const ViewMode mode, const std::string filename) {
-    if (model_ptr == nullptr) throw std::logic_error("You need to set Model before setting ViewMode");
-    switch (mode) {
-        case ViewMode::Filemode:
-            if (filename != "") {
-                view_ptr.reset( new Automata1DFileWriter(std::dynamic_pointer_cast<Automata1DModel>(model_ptr), 
-                                filename));
-            }
-            else {
-                view_ptr.reset( new Automata1DFileWriter(std::dynamic_pointer_cast<Automata1DModel>(model_ptr),
-                                "file.txt"));
-            }
-
-            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
-            break;
-        case ViewMode::Printmode:
-            view_ptr.reset(new Automata1DConsoleWriter(std::dynamic_pointer_cast<Automata1DModel>(model_ptr)));
-            
-            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
-            break;
-        case ViewMode::Printmode2D:
-            view_ptr.reset(new Automata2DSquareConsoleWriter(std::dynamic_pointer_cast<Automata2DSquareModel>(model_ptr)));
-            
-            if (view_ptr->getTag() != currentTag) throw std::logic_error("Mismatch between dimentiality of model and view detected");
-            break;
-        default:
-            throw NotImplemented();
-            break;
-    }
-}
-
-void AutomataController::setModel(const Model mode, const size_t boardSize, const uint8_t rule_no) {
-    switch (mode) {
+AutomataController::AutomataController( const Model modelType, 
+                                        const size_t boardSize,
+                                        const ViewMode viewType) {
+    switch (modelType) {
         case Model::Basic1D:
             currentTag = "1D";
             model_ptr.reset(new Automata1DModel(boardSize)); 
-            std::dynamic_pointer_cast<Automata1DModel>(model_ptr)->setRule(rule_no);
+            // default rule is 90 because i like it, fight me
+            std::dynamic_pointer_cast<Automata1DModel>(model_ptr)->setRule(90);
             break;
         case Model::Square2D:
             currentTag = "2D";
@@ -51,6 +23,25 @@ void AutomataController::setModel(const Model mode, const size_t boardSize, cons
             break;
         default:
             throw std::invalid_argument("Bad Model selected");
+            break;
+    }
+
+    switch (viewType) {
+        case ViewMode::Filemode:
+            if (currentTag == "1D")
+                view_ptr.reset( new Automata1DFileWriter(std::dynamic_pointer_cast<Automata1DModel>(model_ptr),
+                                "file.txt"));
+            else if (currentTag == "2D") 
+                throw NotImplemented("No FileMode for square 2D automatas yet");
+            break;
+        case ViewMode::Printmode:
+            if (currentTag == "1D")
+                view_ptr.reset(new Automata1DConsoleWriter(std::dynamic_pointer_cast<Automata1DModel>(model_ptr)));
+            else if (currentTag == "2D")
+                view_ptr.reset(new Automata2DSquareConsoleWriter(std::dynamic_pointer_cast<Automata2DSquareModel>(model_ptr)));            
+            break;
+        default:
+            throw NotImplemented();
             break;
     }
 }
@@ -61,4 +52,14 @@ void AutomataController::runModel(const unsigned int iters) const {
         model_ptr->nextState();
         view_ptr->writeBoard();
     }
+}
+
+void AutomataController::setRule(const uint8_t rule_no) {
+    if (currentTag != "1D") throw std::logic_error("Can't set rule with 8 bit number if model is not one dimentional");
+    std::dynamic_pointer_cast<Automata1DModel>(model_ptr)->setRule(rule_no);
+}
+
+void AutomataController::setRule(const Rule2D rule_enum) {
+    if (currentTag != "2D") throw std::logic_error("Can't set rule with Rule2D enum if model is not two dimentional");
+    std::dynamic_pointer_cast<Automata2DSquareModel>(model_ptr)->setRule(rule_enum);
 }
