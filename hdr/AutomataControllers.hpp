@@ -19,10 +19,9 @@ enum class Model {
 class AutomataControllerInterface {
     public:
         virtual ~AutomataControllerInterface() = default;
-        std::string currentTag;
-    protected:
         virtual void runModel(const unsigned int) const = 0;
-
+    protected:
+        std::string currentTag;
         std::unique_ptr<AutomataViewInterface> view_ptr;
         std::shared_ptr<AutomataModelInterface> model_ptr;
 };
